@@ -42,12 +42,12 @@ jobs:
           }
 
           # Get supported .NET versions from the releases index
-          # - Only active support-phase channels (3.0+)
+          # - Only active and maintenance support-phase channels (3.0+)
           # - Exclude legacy .NET Core 1.x and 2.x versions (not supported by this project)
           $supportedVersions = $releasesIndex.'releases-index' | Where-Object {
             $_.'channel-version' -match '^\d+\.\d+$' -and
             [int]($_.'channel-version' -split '\.')[0] -ge 3 -and
-            $_.'support-phase' -eq 'active'
+            $_.'support-phase' -in @('active', 'maintenance')
           } | Sort-Object { [int]($_.'channel-version' -split '\.')[0] }
 
           Write-Host "Supported .NET versions: $($supportedVersions.'channel-version' -join ', ')"
